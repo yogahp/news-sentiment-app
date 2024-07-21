@@ -41,16 +41,24 @@ const News = () => {
         ))}
       </div>
       {selectedArticle && (
-        <Modal isOpen={!!selectedArticle} onRequestClose={closeModal} contentLabel="Article Details" className="bg-white p-5 rounded shadow-lg max-w-2xl mx-auto mt-20">
+        <Modal
+          isOpen={!!selectedArticle}
+          onRequestClose={closeModal}
+          contentLabel="Article Details"
+          className="relative bg-white p-5 rounded shadow-lg max-w-2xl mx-auto overflow-y-auto max-h-full"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+        >
           <h2 className="text-2xl font-bold mb-2">{selectedArticle.title}</h2>
           <img src={selectedArticle.banner_image} alt={selectedArticle.title} className="w-full h-auto mb-4" />
-          <p className="mb-2">{selectedArticle.summary}</p>
-          <p className="text-gray-600">Published at: {selectedArticle.time_published}</p>
-          <p className="text-gray-600">Sentiment: {selectedArticle.overall_sentiment_label}</p>
-          <p className="text-gray-600">Sentiment Score: {selectedArticle.overall_sentiment_score}</p>
-          <p className="text-gray-600">Authors: {selectedArticle.authors.join(', ')}</p>
-          <p className="text-gray-600">Source: {selectedArticle.source}</p>
-          <a href={selectedArticle.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Read more</a>
+          <div className="max-h-96 overflow-y-auto">
+            <p className="mb-2">{selectedArticle.summary}</p>
+            <p className="text-gray-600">Published at: {selectedArticle.time_published}</p>
+            <p className="text-gray-600">Sentiment: {selectedArticle.overall_sentiment_label}</p>
+            <p className="text-gray-600">Sentiment Score: {selectedArticle.overall_sentiment_score}</p>
+            <p className="text-gray-600">Authors: {selectedArticle.authors.join(', ')}</p>
+            <p className="text-gray-600">Source: {selectedArticle.source}</p>
+            <a href={selectedArticle.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Read more</a>
+          </div>
           <button onClick={closeModal} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Close</button>
         </Modal>
       )}
