@@ -7,14 +7,17 @@ Modal.setAppElement('#root');
 const News = () => {
   const [news, setNews] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getNews = async () => {
       try {
         const data = await fetchNewsSentiment();
         setNews(data);
+        setLoading(false);
       } catch (error) {
         console.error(error);
+        setLoading(false);
       }
     };
     getNews();
@@ -31,15 +34,21 @@ const News = () => {
   return (
     <div className="p-5">
       <h1 className="text-3xl font-bold mb-5">Latest News & Sentiments</h1>
-      <div className="grid gap-4">
-        {news.map((article, index) => (
-          <div key={index} className="news-card p-5 border rounded shadow hover:bg-gray-100 cursor-pointer" onClick={() => openModal(article)}>
-            <h2 className="text-xl font-semibold">{article.title}</h2>
-            <p className="text-gray-700">{article.summary}</p>
-            <p className="text-gray-600">Sentiment: {article.overall_sentiment_label}</p>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {news.map((article, index) => (
+            <div key={index} className="news-card p-5 border rounded shadow hover:bg-gray-100 cursor-pointer" onClick={() => openModal(article)}>
+              <h2 className="text-xl font-semibold">{article.title}</h2>
+              <p className="text-gray-700">{article.summary}</p>
+              <p className="text-gray-600">Sentiment: {article.overall_sentiment_label}</p>
+            </div>
+          ))}
+        </div>
+      )}
       {selectedArticle && (
         <Modal
           isOpen={!!selectedArticle}
