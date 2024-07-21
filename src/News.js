@@ -31,9 +31,9 @@ const News = () => {
     setSelectedArticle(null);
   };
 
-  const truncateTitle = (title, maxLength) => {
-    if (title.length <= maxLength) return title;
-    return title.slice(0, maxLength) + '...';
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '...';
   };
 
   return (
@@ -47,8 +47,8 @@ const News = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {news.map((article, index) => (
             <div key={index} className="news-card p-5 border rounded shadow hover:bg-gray-100 cursor-pointer" onClick={() => openModal(article)}>
-              <h2 className="text-xl font-semibold">{truncateTitle(article.title, 50)}</h2>
-              <p className="text-gray-700">{article.summary}</p>
+              <h2 className="text-xl font-semibold">{truncateText(article.title, 50)}</h2>
+              <p className="text-gray-700">{truncateText(article.summary, 100)}</p>
               <p className="text-gray-600">Sentiment: {article.overall_sentiment_label}</p>
             </div>
           ))}
