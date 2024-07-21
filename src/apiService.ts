@@ -1,9 +1,21 @@
 import axios from 'axios';
 
+export interface Article {
+  title: string;
+  summary: string;
+  banner_image: string;
+  time_published: string;
+  overall_sentiment_label: string;
+  overall_sentiment_score: number;
+  authors: string[];
+  source: string;
+  url: string;
+}
+
 // const API_KEY = 'RIBXT3XYLI69PC0Q';
 // const BASE_URL = 'https://www.alphavantage.co/query';
 
-// export const fetchNewsSentiment = async () => {
+// export const fetchNewsSentiment = async (): Promise<Article[]> => {
 //   try {
 //     const response = await axios.get(BASE_URL, {
 //       params: {
@@ -20,7 +32,7 @@ import axios from 'axios';
 //   }
 // };
 
-export const fetchNewsSentiment = async () => {
+export const fetchNewsSentiment = async (): Promise<Article[]> => {
   try {
     const response = await fetch('/sample_response.json'); // Fetching the local JSON file
     const data = await response.json();
