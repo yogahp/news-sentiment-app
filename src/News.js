@@ -9,21 +9,42 @@ const News = () => {
   const [news, setNews] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [allNews, setAllNews] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    const getNews = async () => {
-      try {
-        const data = await fetchNewsSentiment();
-        console.log('API Response:', data); // Debugging: Log API response
-        setNews(data || []);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching news sentiment data:', error);
-        setLoading(false);
-      }
-    };
-    getNews();
+    fetchInitialNews();
   }, []);
+
+  const fetchInitialNews = async () => {
+    try {
+      const data = await fetchNewsSentiment();
+      setAllNews(data); // Store all data
+      const initialNews = data.slice(0, 9); // Get first 9 items
+      setNews(initialNews);
+      setLoading(false);
+      setPage(2);
+    } catch (error) {
+      console.error('Error fetching news sentiment data:', error);
+      setLoading(false);
+    }
+  };
+
+  const loadMoreNews = () => {
+    setLoadingMore(true);
+    setTimeout(() => {
+      const startIndex = (page - 1) * 9;
+      const endIndex = startIndex + 9;
+      const moreNews = allNews.slice(startIndex, endIndex);
+
+      if (moreNews.length > 0) {
+        setNews((prevNews) => [...prevNews, ...moreNews]);
+        setPage((prevPage) => prevPage + 1);
+      }
+      setLoadingMore(false);
+    }, 1500); // Simulate loading time of 1.5 seconds
+  };
 
   const openModal = (article) => {
     setSelectedArticle(article);
@@ -59,17 +80,29 @@ const News = () => {
           <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {news && news.length > 0 ? (
-            news.map((article, index) => (
+        <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {news.map((article, index) => (
               <div key={index} className="news-card p-5 border rounded shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-white" onClick={() => openModal(article)}>
                 <h2 className="text-xl font-semibold mb-2">{truncateText(article.title, 50)}</h2>
                 <p className="text-gray-700 mb-4">{truncateText(article.summary, 100)}</p>
                 <p className={`font-medium ${getSentimentColor(article.overall_sentiment_label)}`}>Sentiment: {article.overall_sentiment_label}</p>
               </div>
-            ))
-          ) : (
-            <p>No news articles available.</p>
+            ))}
+          </div>
+          {news.length < allNews.length && (
+            <div className="flex justify-center mt-5">
+              {loadingMore ? (
+                <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+              ) : (
+                <button
+                  onClick={loadMoreNews}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300"
+                >
+                  Load More
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}
