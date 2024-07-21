@@ -14,10 +14,11 @@ const News = () => {
     const getNews = async () => {
       try {
         const data = await fetchNewsSentiment();
+        console.log('API Response:', data); // Debugging: Log API response
         setNews(data || []);
         setLoading(false);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching news sentiment data:', error);
         setLoading(false);
       }
     };
@@ -59,7 +60,7 @@ const News = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {news.length > 0 ? (
+          {news && news.length > 0 ? (
             news.map((article, index) => (
               <div key={index} className="news-card p-5 border rounded shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-white" onClick={() => openModal(article)}>
                 <h2 className="text-xl font-semibold mb-2">{truncateText(article.title, 50)}</h2>
