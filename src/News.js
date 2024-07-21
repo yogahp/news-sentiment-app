@@ -39,7 +39,7 @@ const News = () => {
           <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {news.map((article, index) => (
             <div key={index} className="news-card p-5 border rounded shadow hover:bg-gray-100 cursor-pointer" onClick={() => openModal(article)}>
               <h2 className="text-xl font-semibold">{article.title}</h2>
